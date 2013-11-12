@@ -1,0 +1,7 @@
+base objectrepresentation
+author Tim Schumacher
+email tim@bandenkrieg.hacked.jp
+date 2013-11-12
+name object representation
+desc Include the current date and time
+url http://www.dokuwiki.org/devel:syntax_plugins
