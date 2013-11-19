@@ -7,60 +7,84 @@
  */
 
 // must be run within DokuWiki
-if (!defined('DOKU_INC')) die();
+if (!defined ('DOKU_INC')) die();
 
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined ('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_PLUGIN . 'syntax.php';
 
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'DokuWikiObjectRepresentation.class.php';
+require_once dirname (__FILE__) . DIRECTORY_SEPARATOR . 'DokuWikiObjectRepresentation.class.php';
 
 /**
  * All DokuWiki plugins to extend the parser/rendering mechanism
  * need to inherit from this class
  */
-class syntax_plugin_objectrepresentation extends DokuWiki_Syntax_Plugin
-{
+class syntax_plugin_objectrepresentation extends DokuWiki_Syntax_Plugin {
 
-    function getInfo()
-    {
-        return array('author' => 'me',
-            'email' => 'me@someplace.com',
-            'date' => '2005-07-28',
-            'name' => 'Now Plugin',
-            'desc' => 'Include the current date and time',
-            'url' => 'http://www.dokuwiki.org/devel:syntax_plugins');
+  function getInfo () {
+    return array ('author' => 'me',
+      'email' => 'me@someplace.com',
+      'date' => '2005-07-28',
+      'name' => 'Now Plugin',
+      'desc' => 'Include the current date and time',
+      'url' => 'http://www.dokuwiki.org/devel:syntax_plugins');
+  }
+
+  function getType () {
+    return 'substition';
+  }
+
+  function getSort () {
+    return 32;
+  }
+
+  function connectTo ($mode) {
+    $this->Lexer->addSpecialPattern('{{indexmenu_n>(\d+)}}',$mode,'plugin_objectrepresentation');
+    $this->Lexer->addSpecialPattern ('\[NOW\]', $mode, 'plugin_objectrepresentation');
+  }
+
+  function handle ($match, $state, $pos, &$handler) {
+    return array ($match, $state, $pos);
+  }
+
+  function render ($mode, &$renderer, $data) {
+    global $ID;
+
+    $iter = new DokuWikiIterator();
+
+    $iter->all(function(DokuWikiNode $node) {
+      if (preg_match('/{{indexmenu_n>(\d+)}}/',$node->getContent(),$matches)) {
+        $node->setMetaData('sortorder',$matches[1]);
+      } else {
+        $node->setMetaData('sortorder',9999999);
+      }
+    });
+
+    $iter->all(function(DokuWikiNode $node){
+      if ($node instanceof DokuWikiNameSpace) {
+        $node->nodes->uasort(function(DokuWikiNode $a,DokuWikiNode $b){
+          if ($a->getMetaData('sortorder') == $b->getMetaData('sortorder')) {
+            return 0;
+          }
+          return ($a->getMetaData('sortorder') < $b->getMetaData('sortorder')) ? -1 : 1;
+        });
+      }
+    });
+
+    $content = '<ul>';
+
+    $iter->all(function(DokuWikiNode $node) use (&$content){
+      if ($node->getName() != 'root') {
+        $content .= '<li>' . $node->getFullID() . ':' . $node->getMetaData('sortorder') . '</li>';
+      }
+    });
+
+    $content .= '</ul>';
+
+    // $data is what the function handle return'ed.
+    if ($mode == 'xhtml') {
+      $renderer->doc .= $content;
+      return true;
     }
-
-    function getType()
-    {
-        return 'substition';
-    }
-
-    function getSort()
-    {
-        return 32;
-    }
-
-    function connectTo($mode)
-    {
-        $this->Lexer->addSpecialPattern('\[NOW\]', $mode, 'plugin_objectrepresentation');
-    }
-
-    function handle($match, $state, $pos, &$handler)
-    {
-        return array($match, $state, $pos);
-    }
-
-    function render($mode, &$renderer, $data)
-    {
-        global $ID;
-
-        $iter = new DokuWikiIterator();
-        // $data is what the function handle return'ed.
-        if ($mode == 'xhtml') {
-            $renderer->doc .= date('r');
-            return true;
-        }
-        return false;
-    }
+    return false;
+  }
 }
