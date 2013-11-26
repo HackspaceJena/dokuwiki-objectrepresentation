@@ -114,6 +114,7 @@ abstract class DokuWikiNode {
       }
       $node = $parent;
     }
+    $path = array_reverse($path);
     if ($this->name != 'root') {
       $path[] = $this->name;
     }
