@@ -172,6 +172,10 @@ class DokuWikiNameSpace extends DokuWikiNode {
     return $retval;
   }
 
+  public function getNodes() {
+    return $this->nodes;
+  }
+
 }
 
 /**
@@ -249,5 +253,9 @@ class DokuWikiIterator {
    */
   public function toString () {
     return $this->root->toString();
+  }
+
+  public function getRoot() {
+    return $this->root;
   }
 }
