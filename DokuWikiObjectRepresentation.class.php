@@ -216,7 +216,9 @@ class DokuWikiIterator {
     $callback($ns);
     foreach($ns->nodes as $node) {
       /** $node DokuWikiNode */
-      $callback($node);
+      if ($node instanceof DokuWikiPage) {
+        $callback($node);
+      }
       if ($node instanceof DokuWikiNameSpace) {
         $this->_all($node,$callback);
       }
