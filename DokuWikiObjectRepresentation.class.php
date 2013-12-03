@@ -76,6 +76,7 @@ abstract class DokuWikiNode {
   function __construct ($filename, $parent = null) {
     $this->filename = $filename;
     $this->parent = $parent;
+    $this->metadata = new ArrayObject();
     if (is_null ($parent) && is_dir ($filename)) {
       $this->name = 'root';
     } else {
@@ -163,6 +164,7 @@ class DokuWikiNameSpace extends DokuWikiNode {
   public function toString () {
     $retval = '';
     foreach ($this->nodes as $node) {
+      /** @var $node DokuWikiNode */
       if ($this->name == 'root') {
         $retval .= $node->toString() . "\n";
       } else {
@@ -192,6 +194,11 @@ class DokuWikiPage extends DokuWikiNode {
     if (($this->name == 'start') && ($this->parent->name != 'root')) {
       $this->parent->content = $this->content;
     }
+    $metadata = p_get_metadata($this->getFullID());
+    foreach($metadata as $key => $value) {
+      $this->setMetaData($key,$value);
+    }
+
   }
 }
 
