@@ -178,6 +178,18 @@ class DokuWikiNameSpace extends DokuWikiNode {
     return $this->nodes;
   }
 
+  public function hasChild($nodeName) {
+    if ($this->nodes->count() > 0) {
+      foreach($this->nodes as $node) {
+        /** @var DokuWikiNode $node */
+        if (($node instanceof DokuWikiPage) && ($node->getName() == $nodeName)) {
+          return $node;
+        }
+      }
+    }
+    return null;
+  }
+
 }
 
 /**
