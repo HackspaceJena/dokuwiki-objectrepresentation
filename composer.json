@@ -3,7 +3,7 @@
     "type": "library",
     "description": "DokuWiki data abstraction from the future",
     "keywords": ["dokuwiki", "abstraction"],
-    "homepage": "https://bk-dev.hacked.jp/project/view/1/",
+    "homepage": "https://phablab.krautspace.de/project/view/1/",
     "license": "GPL2",
     "authors": [
         {
