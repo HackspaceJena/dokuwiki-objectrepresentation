@@ -1,18 +1,23 @@
 {
-  "name": "enko/dokuwikiobjectrepresentation",
-  "type": "library",
-  "description": "DokuWiki data abstraction from the future",
-  "keywords": ["dokuwiki","abstraction"],
-  "homepage": "https://bk-dev.hacked.jp/project/view/1/",
-  "license": "GPL2",
-  "authors": [
-    {
-      "name": "Tim Schumacher",
-      "email": "tim@bandenkrieg.hacked.jp",
-      "role": "Developer"
+    "name": "enko/dokuwikiobjectrepresentation",
+    "type": "library",
+    "description": "DokuWiki data abstraction from the future",
+    "keywords": ["dokuwiki", "abstraction"],
+    "homepage": "https://bk-dev.hacked.jp/project/view/1/",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "Tim Schumacher",
+            "email": "tim@bandenkrieg.hacked.jp",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "enko\\dokuwiki\\objectrepresentation\\": "lib/enko/dokuwiki/objectrepresentation"
+        }
     }
-  ],
-  "require": {
-    "php": ">=5.3.0"
-  }
 }
