@@ -19,9 +19,9 @@ class DokuWikiNameSpace extends DokuWikiNode
      * @param $path
      * @param null $parent
      */
-    function __construct($path, $parent = null)
+    function __construct($path, $parent = null,$loadChangesets = false, \DateTime $maxChangeSetAge = null)
     {
-        parent::__construct($path, $parent);
+        parent::__construct($path, $parent, $loadChangesets, $maxChangeSetAge);
         $files = dir($path);
 
         $this->nodes = new \ArrayObject();
@@ -31,10 +31,10 @@ class DokuWikiNameSpace extends DokuWikiNode
             $file = $path . DIRECTORY_SEPARATOR . $realfile;
             if (is_dir($file)) {
                 if (!(($realfile == '.') or ($realfile == '..'))) {
-                    $node = new DokuWikiNameSpace($file, $this);
+                    $node = new DokuWikiNameSpace($file, $this, $loadChangesets, $maxChangeSetAge);
                 }
             } else {
-                $node = new DokuWikiPage($file, $this);
+                $node = new DokuWikiPage($file, $this, $loadChangesets, $maxChangeSetAge);
             }
             if ($node) {
                 $this->nodes->append($node);

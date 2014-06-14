@@ -55,12 +55,12 @@ class DokuWikiIterator
     /**
      *
      */
-    public function __construct()
+    public function __construct($loadChangesets = false, \DateTime $maxChangeSetAge = null)
     {
         global $conf;
         $basedir = $conf['datadir'];
 
-        $this->root = new DokuWikiNameSpace($basedir);
+        $this->root = new DokuWikiNameSpace($basedir, null, $loadChangesets, $maxChangeSetAge);
     }
 
     /**
