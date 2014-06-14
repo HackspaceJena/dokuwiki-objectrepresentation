@@ -18,6 +18,7 @@ class DokuWikiChangeset {
     private $sum;
     private $extra;
     private $content;
+    private $page;
 
     /**
      * @return mixed
@@ -75,6 +76,10 @@ class DokuWikiChangeset {
         return $this->type;
     }
 
+    public function getPage() {
+        return $this->page;
+    }
+
     /**
      * @return mixed
      */
@@ -83,7 +88,7 @@ class DokuWikiChangeset {
         return $this->user;
     }
 
-    function __construct($date,$extra, $id, $ip, $sum, $type, $user)
+    function __construct($date,$extra, $id, $ip, $sum, $type, $user, DokuWikiPage $page)
     {
         $this->date = new \DateTime();
         $this->date->setTimestamp($date);
@@ -94,6 +99,7 @@ class DokuWikiChangeset {
         $this->type = $type;
         $this->user = $user;
         $this->content = rawWiki($id,$this->date->format('U'));
+        $this->page = $page;
     }
 
 

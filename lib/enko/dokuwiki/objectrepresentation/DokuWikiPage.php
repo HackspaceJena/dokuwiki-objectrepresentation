@@ -35,10 +35,14 @@ class DokuWikiPage extends DokuWikiNode
             $changelog_entries = explode("\n", file_get_contents($file));
             foreach ($changelog_entries as $raw_entry) {
                 $entry = parseChangelogLine($raw_entry);
-                $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user']);
+                $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user'],$this);
                 $this->ChangeLog->append($changelog);
             }
         }
 
+    }
+
+    public function getTitle() {
+        return strlen($this->getMetaData('title')) > 0 ? $this->getMetaData('title') : $this->getName();
     }
 }
