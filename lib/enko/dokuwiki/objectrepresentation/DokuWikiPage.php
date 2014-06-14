@@ -38,7 +38,7 @@ class DokuWikiPage extends DokuWikiNode
                     $entry = parseChangelogLine($raw_entry);
                     if ((!is_null($this->maxChangeSetAge)) && ($this->maxChangeSetAge->format('U') > $entry['date']))
                         continue;
-                    $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user'],$page);
+                    $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user'],$this);
                     $this->ChangeLog->append($changelog);
                 }
             }
