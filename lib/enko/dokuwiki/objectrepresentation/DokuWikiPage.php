@@ -17,9 +17,9 @@ class DokuWikiPage extends DokuWikiNode
      * @param $filename
      * @param null $parent
      */
-    public function __construct($filename, $parent = null)
+    public function __construct($filename, $parent = null,$loadChangesets = false, \DateTime $maxChangeSetAge = null)
     {
-        parent::__construct($filename, $parent);
+        parent::__construct($filename, $parent,$loadChangesets,$maxChangeSetAge);
         $this->content = file_get_contents($this->filename);
         if (($this->name == 'start') && ($this->parent->name != 'root')) {
             $this->parent->content = $this->content;
@@ -28,15 +28,19 @@ class DokuWikiPage extends DokuWikiNode
         foreach ($metadata as $key => $value) {
             $this->setMetaData($key, $value);
         }
-        // extract changelog
         $this->ChangeLog = new \ArrayObject();
-        $file = metaFN($this->getFullID(), '.changes');
-        if (file_exists($file)) {
-            $changelog_entries = explode("\n", file_get_contents($file));
-            foreach ($changelog_entries as $raw_entry) {
-                $entry = parseChangelogLine($raw_entry);
-                $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user']);
-                $this->ChangeLog->append($changelog);
+        if ($this->loadChangesets) {
+            // extract changelog
+            $file = metaFN($this->getFullID(), '.changes');
+            if (file_exists($file)) {
+                $changelog_entries = explode("\n", file_get_contents($file));
+                foreach ($changelog_entries as $raw_entry) {
+                    $entry = parseChangelogLine($raw_entry);
+                    if ((!is_null($this->maxChangeSetAge)) && ($this->maxChangeSetAge->format('U') > $entry['date']))
+                        continue;
+                    $changelog = new DokuWikiChangeset($entry['date'], $entry['extra'], $entry['id'], $entry['ip'], $entry['sum'], $entry['type'], $entry['user']);
+                    $this->ChangeLog->append($changelog);
+                }
             }
         }
 

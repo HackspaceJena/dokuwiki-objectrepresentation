@@ -32,6 +32,12 @@ abstract class DokuWikiNode
     /** @var DokuWikiNameSpace */
     protected $parent = null;
 
+    /** @var bool  */
+    protected $loadChangesets = false;
+
+    /** @var \DateTime  */
+    protected $maxChangeSetAge = null;
+
 
     /**
      * @return string
@@ -81,11 +87,13 @@ abstract class DokuWikiNode
      * @param $filename
      * @param null $parent
      */
-    function __construct($filename, $parent = null)
+    function __construct($filename, $parent = null, $loadChangesets = false, \DateTime $maxChangeSetAge = null)
     {
         $this->filename = $filename;
         $this->parent = $parent;
         $this->metadata = new \ArrayObject();
+        $this->loadChangesets = $loadChangesets;
+        $this->maxChangeSetAge = $maxChangeSetAge;
         if (is_null($parent) && is_dir($filename)) {
             $this->name = 'root';
         } else {
