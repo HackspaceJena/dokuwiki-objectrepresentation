@@ -84,6 +84,13 @@ abstract class DokuWikiNode
     }
 
     /**
+     * @return DokuWikiNameSpace
+     */
+    public function getParent() {
+        return $this->parent;
+    }
+
+    /**
      * @param $filename
      * @param null $parent
      */
