@@ -42,6 +42,14 @@ class DokuWikiPage extends DokuWikiNode
                     $this->ChangeLog->append($changelog);
                 }
             }
+            if ($this->ChangeLog->count() > 0) {
+                $this->ChangeLog->uasort(function(DokuWikiChangeset $a, DokuWikiChangeset $b){
+                    if ($a->getDate() == $b->getDate()) {
+                        return 0;
+                    }
+                    return ($a->getDate() > $b->getDate()) ? -1 : 1;
+                });
+            }
         }
 
     }
